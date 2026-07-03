@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Clone Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --porcelain:#F0EFEC;--white:#FBFAF8;--ink:#17181D;--ink-soft:#55565E;
+    --iris:#4B3FE4;--iris-deep:#362CB8;--iris-tint:#F1F0FF;
+    --sand:#E7DCCB;--line:#DEDBD4;--green:#1F8A56;--red:#B5471F;
+    --shadow:0 24px 60px -24px rgba(23,24,29,.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--porcelain);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .narrow{max-width:720px;margin:0 auto;padding:0 24px}
+  .view{display:none;animation:fade .45s ease}.view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  h1,h2,h3,h4{letter-spacing:-.015em}
+  .serif{font-family:'Fraunces',Georgia,serif}
+
+  header{padding:20px 0}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .wordmark{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;display:flex;align-items:center;gap:9px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--iris);box-shadow:0 0 0 4px rgba(75,63,228,.14)}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);border:1px solid var(--line);border-radius:100px;padding:6px 13px}
+
+  .cta{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:var(--white);border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:1.02rem;font-weight:600;padding:17px 26px;border-radius:13px;transition:transform .18s ease,background .18s ease;box-shadow:var(--shadow)}
+  .cta:hover{background:var(--iris);transform:translateY(-2px)}
+  .cta:focus-visible{outline:3px solid var(--iris);outline-offset:3px}
+  .cta .price{background:rgba(255,255,255,.16);border-radius:7px;padding:3px 9px;font-family:'JetBrains Mono',monospace;font-size:.86rem}
+  .anchor{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--ink-soft);margin-top:13px}
+  .anchor s{opacity:.6}.anchor b{color:var(--iris-deep)}
+  .section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--iris-deep);margin-bottom:22px;text-align:center}
+
+  /* hero */
+  .hero{padding:30px 0 56px;display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--iris-deep);margin-bottom:20px}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(2.2rem,4.8vw,3.45rem);line-height:1.05;margin-bottom:20px}
+  h1 em{font-style:italic;color:var(--iris)}
+  .sub{font-size:1.07rem;color:var(--ink-soft);max-width:40ch;margin-bottom:28px}
+  .sub b{color:var(--ink);font-weight:600}
+
+  /* chat mockup */
+  .chatcard{background:var(--white);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:20px;position:relative}
+  .chathead{display:flex;align-items:center;gap:11px;padding-bottom:15px;border-bottom:1px dashed var(--line);margin-bottom:16px}
+  .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(140deg,var(--iris),var(--iris-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px}
+  .chathead .who{font-size:.92rem;font-weight:600;line-height:1.2}
+  .chathead .status{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--iris);display:flex;align-items:center;gap:6px}
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--iris);animation:pulse 1.8s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+  .msg{opacity:0;transform:translateY(8px);animation:rise .5s ease forwards;max-width:84%;padding:11px 15px;font-size:.94rem;line-height:1.5;margin-bottom:11px}
+  .msg.them{margin-left:auto;background:var(--sand);color:var(--ink);border-radius:16px 16px 4px 16px}
+  .msg.you{margin-right:auto;background:var(--iris);color:#fff;border-radius:16px 16px 16px 4px}
+  .msg.d1{animation-delay:.25s}.msg.d2{animation-delay:.7s}.msg.d3{animation-delay:1.25s}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .cap{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-soft);text-align:center;margin-top:4px}
+  .cap b{color:var(--iris-deep);font-weight:500}
+  .stamp{position:absolute;top:-13px;left:-13px;background:var(--ink);color:var(--white);font-family:'JetBrains Mono',monospace;font-size:11px;padding:7px 12px;border-radius:9px;transform:rotate(-3deg);box-shadow:var(--shadow)}
+  .demo-scroll{max-height:280px;overflow-y:auto;padding-right:4px}
+  .demo-input-row{display:flex;gap:8px;margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+  .demo-input-row input{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:11px;font-family:'Inter',sans-serif;font-size:.92rem;background:var(--porcelain)}
+  .demo-input-row input:focus{outline:2px solid var(--iris);border-color:var(--iris)}
+  .demo-send{flex:none;background:var(--iris);color:#fff;border:none;border-radius:11px;padding:0 16px;cursor:pointer;font-weight:600;font-size:.9rem;transition:background .15s}
+  .demo-send:hover{background:var(--iris-deep)}
+  .demo-send:disabled{opacity:.5;cursor:default}
+  .typing{display:flex;gap:4px;padding:14px 15px}
+  .typing span{width:7px;height:7px;border-radius:50%;background:var(--iris);opacity:.5;animation:blink 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+  .demo-hint{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-soft);text-align:center;margin-top:9px}
+
+  /* numbered mechanism */
+  .mech-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:920px;margin:0 auto;counter-reset:m}
+  .mech-step{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:26px 24px;position:relative}
+  .mech-step .mnum{font-family:'Fraunces',serif;font-size:2.4rem;font-weight:500;color:var(--iris);line-height:1;margin-bottom:12px}
+  .mech-step h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.18rem;margin-bottom:8px}
+  .mech-step p{font-size:.92rem;color:var(--ink-soft)}
+  .mech-step .time{display:inline-block;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--iris-deep);background:var(--iris-tint);padding:5px 11px;border-radius:100px}
+  .mech-total{text-align:center;margin-top:28px;font-family:'Fraunces',serif;font-size:1.25rem;color:var(--ink)}
+  .mech-total em{font-style:italic;color:var(--iris)}
+  @media(max-width:860px){.mech-steps{grid-template-columns:1fr}}
+  /* testimonial */
+  .testi{max-width:760px;margin:0 auto;background:var(--white);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:40px}
+  .testi .quotemark{font-family:'Fraunces',serif;font-size:3.5rem;line-height:.6;color:var(--iris);height:28px}
+  .testi blockquote{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(1.25rem,2.6vw,1.6rem);line-height:1.4;letter-spacing:-.01em;margin:0 0 22px}
+  .testi blockquote em{font-style:italic;color:var(--iris)}
+  .testi .attrib{display:flex;align-items:center;gap:13px}
+  .testi .ava{width:44px;height:44px;border-radius:50%;background:linear-gradient(140deg,var(--sand),#D6C3A6);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--ink)}
+  .testi .who2{font-size:.92rem;font-weight:600}
+  .testi .who2 span{display:block;font-weight:400;color:var(--ink-soft);font-size:.82rem;font-family:'JetBrains Mono',monospace;margin-top:2px}
+  .testi-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:940px;margin:0 auto;align-items:center}
+  .testi-shot{background:var(--white);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:14px;position:relative}
+  .testi-shot img{width:100%;border-radius:11px;display:block}
+  .testi-shot .receipt{position:absolute;top:-11px;right:14px;background:var(--green);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;padding:6px 11px;border-radius:8px}
+  @media(max-width:860px){.testi-grid{grid-template-columns:1fr}.testi{padding:30px 24px}}
+  .testi-grid + .testi-grid{margin-top:24px}
+  .testi-grid.rev .testi-shot{order:-1}
+  @media(max-width:860px){.testi-grid.rev .testi-shot{order:0}}
+  /* case study */
+  .case{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;max-width:960px;margin:0 auto;align-items:center}
+  .case + .case{margin-top:26px;padding-top:44px;border-top:1px solid var(--line)}
+  .case.rev .case-shot{order:-1}
+  .case-body .ctag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--iris-deep);background:var(--iris-tint);padding:6px 12px;border-radius:100px;margin-bottom:16px}
+  .case-body h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.4rem;line-height:1.2;margin-bottom:14px;letter-spacing:-.01em}
+  .case-body p{color:var(--ink-soft);font-size:.97rem;line-height:1.6;margin-bottom:12px}
+  .case-body p b{color:var(--ink);font-weight:600}
+  .case-body .said{border-left:3px solid var(--iris);padding-left:16px;margin-top:16px;font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--ink);line-height:1.45}
+  .case-body .attrib2{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-soft)}
+  .case-shot{background:var(--white);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:13px;position:relative}
+  .case-shot img{width:100%;border-radius:10px;display:block}
+  .case-shot .receipt{position:absolute;top:-11px;right:13px;background:var(--green);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.05em;padding:6px 10px;border-radius:8px}
+  @media(max-width:860px){.case,.case.rev{grid-template-columns:1fr;gap:20px}.case.rev .case-shot{order:0}}
+
+  /* generic section */
+  section.band{padding:60px 0}
+  .h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.7rem,3.6vw,2.4rem);line-height:1.12;text-align:center;margin-bottom:14px}
+  .h2 em{font-style:italic;color:var(--iris)}
+  .lead{text-align:center;color:var(--ink-soft);max-width:56ch;margin:0 auto 40px;font-size:1.05rem}
+
+  /* for-you-if */
+  .foryou{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .foryou-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:840px;margin:0 auto}
+  .foryou-item{display:flex;gap:14px;align-items:flex-start;padding:20px 22px;background:var(--porcelain);border-radius:14px}
+  .foryou-item .ic{flex:none;width:30px;height:30px;border-radius:8px;background:var(--iris-tint);display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .foryou-item p{font-size:.98rem}.foryou-item p b{font-weight:600}
+
+  /* story */
+  .story{background:var(--ink);color:#fff}
+  .story .kick{color:#8E8CF5}
+  .story h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(1.5rem,3.3vw,2.1rem);line-height:1.3;max-width:26ch;margin:0 auto 26px;text-align:center}
+  .story h2 em{font-style:italic;color:#A9A6FF}
+  .steps{max-width:620px;margin:0 auto}
+  .step-row{display:flex;gap:18px;margin-bottom:20px;align-items:flex-start}
+  .step-row .num{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.28);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:#A9A6FF}
+  .step-row p{color:#C7C8D0;font-size:1rem;line-height:1.55}.step-row p b{color:#fff;font-weight:600}
+
+  /* old vs new */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto}
+  .col{border-radius:18px;padding:30px}
+  .col.old{background:var(--white);border:1px solid var(--line)}
+  .col.new{background:var(--iris);color:#fff}
+  .col h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.35rem;margin-bottom:6px}
+  .col .clab{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;opacity:.7}
+  .col ul{list-style:none}
+  .col li{display:flex;gap:11px;align-items:flex-start;font-size:.95rem;margin-bottom:12px;line-height:1.45}
+  .col.old li svg{stroke:var(--red);flex:none;margin-top:3px}
+  .col.new li svg{stroke:#fff;flex:none;margin-top:3px}
+
+  /* components */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto}
+  .item{background:var(--white);border:1px solid var(--line);border-radius:15px;padding:26px}
+  .item .n{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--iris);margin-bottom:12px}
+  .item h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.22rem;margin-bottom:12px}
+  .item ul{list-style:none}
+  .item li{font-size:.9rem;color:var(--ink-soft);padding-left:20px;position:relative;margin-bottom:8px;line-height:1.45}
+  .item li::before{content:"→";position:absolute;left:0;color:var(--iris)}
+
+  /* value stack */
+  .stackbox{background:var(--white);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);max-width:560px;margin:0 auto;padding:34px;text-align:center}
+  .stackbox .srow{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px dashed var(--line);text-align:left;font-size:.98rem}
+  .stackbox .srow span:last-child{font-family:'JetBrains Mono',monospace;color:var(--ink-soft)}
+  .stackbox .tot{display:flex;justify-content:space-between;padding:16px 0 4px;font-weight:700;font-size:1.05rem}
+  .stackbox .tot span:last-child{font-family:'JetBrains Mono',monospace}
+  .stackbox .today{font-family:'Fraunces',serif;font-size:2.6rem;font-weight:500;color:var(--iris);margin:16px 0 4px;line-height:1}
+  .stackbox .today s{font-size:1.1rem;color:var(--ink-soft);font-family:'Inter',sans-serif;margin-right:10px}
+  .stackbox .cta{margin:22px auto 0;width:100%}
+  .stackbox .stackdiv{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--iris-deep);text-align:left;padding:16px 0 6px;border-bottom:1px dashed var(--line)}
+  .stackbox .srow.bonus span:first-child{color:var(--ink)}
+  .stackbox .srow.bonus span:first-child::before{content:"★ ";color:var(--iris)}
+  .stackbox .anchorbar{background:var(--iris-tint);border-radius:12px;padding:16px;margin-top:18px}
+  .stackbox .today{margin:6px 0 2px}
+
+  /* guarantee */
+  .guarantee{background:var(--white);border:1px solid var(--line);border-radius:22px;padding:36px;display:flex;gap:24px;align-items:center;max-width:820px;margin:0 auto}
+  .shield{flex:none;width:54px;height:54px;border-radius:14px;background:var(--iris-tint);display:flex;align-items:center;justify-content:center}
+  .guarantee h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.3rem;margin-bottom:6px}
+  .guarantee p{color:var(--ink-soft);font-size:.96rem}
+
+  /* faq */
+  .faq{max-width:720px;margin:0 auto}
+  .qa{border-bottom:1px solid var(--line);padding:22px 0}
+  .qa .q{font-family:'Fraunces',serif;font-weight:500;font-size:1.15rem;margin-bottom:8px}
+  .qa .a{color:var(--ink-soft);font-size:.97rem}
+  .qa.warn .q{color:var(--red)}
+
+  .final{text-align:center;padding:60px 0}
+  .final h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);margin-bottom:26px;line-height:1.1}
+  .final .cta{margin:0 auto}
+  .ctacenter{text-align:center;margin-top:40px}
+
+  footer{border-top:1px solid var(--line);padding:26px 0;text-align:center}
+  footer p{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-soft)}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(23,24,29,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .overlay.open{display:flex}
+  .modal{background:var(--porcelain);border-radius:20px;width:100%;max-width:468px;box-shadow:0 40px 90px -20px rgba(0,0,0,.5);max-height:94vh;overflow-y:auto}
+  .mhead{padding:20px 26px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .mhead .step{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--iris)}
+  .mhead .x{background:none;border:none;cursor:pointer;font-size:22px;color:var(--ink-soft);line-height:1;padding:4px}
+  .mbody{padding:26px}
+  .mbody h4{font-family:'Fraunces',serif;font-weight:500;font-size:1.45rem;margin-bottom:6px}
+  .mbody .m-lede{color:var(--ink-soft);font-size:.94rem;margin-bottom:22px}
+  label.fld{display:block;font-size:.82rem;font-weight:600;margin-bottom:7px}
+  .fld input{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:11px;font-family:'Inter',sans-serif;font-size:1rem;background:var(--white);margin-bottom:16px}
+  .fld input:focus{outline:2px solid var(--iris);border-color:var(--iris)}
+  .btn{width:100%;background:var(--ink);color:var(--white);border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;padding:16px;border-radius:12px;transition:background .18s ease}
+  .btn:hover{background:var(--iris)}
+  .btn:focus-visible{outline:3px solid var(--iris);outline-offset:2px}
+  .bump{background:var(--white);border:1.5px dashed var(--iris);border-radius:13px;padding:15px 16px;margin-bottom:13px;display:flex;gap:13px;cursor:pointer;align-items:flex-start}
+  .bump:hover{background:var(--iris-tint)}
+  .bump input{margin-top:3px;width:18px;height:18px;accent-color:var(--iris);flex:none;cursor:pointer}
+  .bump .bt{font-size:.9rem;font-weight:600;margin-bottom:3px}
+  .bump .bt span{color:var(--iris);font-family:'JetBrains Mono',monospace;font-size:.82rem}
+  .bump .bd{font-size:.83rem;color:var(--ink-soft);line-height:1.45}
+  .summary{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
+  .row{display:flex;justify-content:space-between;font-size:.9rem;margin-bottom:7px;color:var(--ink-soft)}
+  .row.total{color:var(--ink);font-weight:700;font-size:1.1rem;margin-top:10px}
+  .mnote{text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);margin-top:14px}
+  .back{background:none;border:none;color:var(--ink-soft);font-size:.85rem;cursor:pointer;margin-bottom:16px;font-family:'Inter',sans-serif}
+  .hidden{display:none}
+
+  /* oto / downsell */
+  .oto{padding:48px 0 70px;text-align:center}
+  .oto .flag{display:inline-block;background:#FBEEE9;color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:8px 15px;border-radius:100px;margin-bottom:26px}
+  .oto h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.08;max-width:20ch;margin:0 auto 20px}
+  .oto h2 em{font-style:italic;color:var(--iris)}
+  .oto .o-lede{color:var(--ink-soft);font-size:1.08rem;max-width:52ch;margin:0 auto 20px}
+  .otocard{background:var(--white);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:32px;max-width:560px;margin:26px auto 0;text-align:left}
+  .otocard .price-lg{font-family:'Fraunces',serif;font-size:2.4rem;font-weight:500;color:var(--iris);line-height:1}
+  .otocard .price-lg small{font-size:1rem;color:var(--ink-soft);font-family:'Inter',sans-serif}
+  .otocard ul{list-style:none;margin:20px 0 0}
+  .otocard li{display:flex;gap:11px;align-items:flex-start;font-size:.95rem;margin-bottom:11px}
+  .otocard li svg{flex:none;margin-top:3px}
+  .btn-yes{background:var(--iris);margin-top:8px}.btn-yes:hover{background:var(--iris-deep)}
+  .decline{display:block;margin:18px auto 0;background:none;border:none;color:var(--ink-soft);font-size:.9rem;cursor:pointer;text-decoration:underline;font-family:'Inter',sans-serif}
+  .oneclick{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);text-align:center;margin-top:12px}
+
+  /* thank you */
+  .ty{padding:44px 0 70px}
+  .ty .check{width:64px;height:64px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 22px}
+  .ty h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.9rem,4vw,2.6rem);text-align:center;margin-bottom:10px}
+  .ty .t-lede{text-align:center;color:var(--ink-soft);font-size:1.05rem;max-width:46ch;margin:0 auto 34px}
+  .video{background:var(--ink);border-radius:18px;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;box-shadow:var(--shadow);margin-bottom:14px}
+  .play{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center}
+  .video .vlabel{font-family:'JetBrains Mono',monospace;font-size:12px;color:#B9BAC2}
+  .vcap{text-align:center;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-soft);margin-bottom:34px}
+  .orderbox{background:var(--white);border:1px solid var(--line);border-radius:15px;padding:22px 24px;margin-bottom:34px}
+  .orderbox .oh{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+  .bridge{background:linear-gradient(160deg,#1C1A38,#17181D);color:#fff;border-radius:22px;padding:38px;box-shadow:var(--shadow)}
+  .bridge .kick{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#8E8CF5;margin-bottom:16px}
+  .bridge h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.5rem;line-height:1.25;margin-bottom:16px;max-width:26ch}
+  .bridge h3 em{font-style:italic;color:#A9A6FF}
+  .bridge p{color:#C3C4CC;font-size:.98rem;max-width:60ch;margin-bottom:12px}
+  .bridge .walls{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 24px}
+  .bridge .wall{font-family:'JetBrains Mono',monospace;font-size:12px;color:#D9D9E4;border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:7px 13px}
+  .bridge .cta{background:var(--white);color:var(--ink)}.bridge .cta:hover{background:var(--iris);color:#fff}
+
+  @media(max-width:860px){
+    .hero{grid-template-columns:1fr;gap:34px;padding:16px 0 40px}
+    .foryou-grid,.compare,.grid3{grid-template-columns:1fr}
+    .guarantee{flex-direction:column;text-align:center;padding:30px 24px}
+    .sub{max-width:none}.bridge{padding:28px 22px}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.msg{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap bar">
+  <div class="wordmark"><span class="dot"></span>THE CLONE BLUEPRINT</div>
+  <div class="tag">$27 · instant access</div>
+</div></header>
+
+<!-- ===== VIEW 1: SALES PAGE ===== -->
+<div class="view active" id="view-sales">
+
+  <!-- HERO -->
+  <section class="wrap hero">
+    <div>
+      <div class="eyebrow">For coaches · consultants · creators</div>
+      <h1>Clone your voice into an AI that <em>answers exactly like you.</em></h1>
+      <p class="sub">Fill in one blueprint, drop in a few pieces of your content, and you'll be talking to an AI version of yourself in <b>under an hour</b>, one that uses your phrases, your rules, your tone. <b>No code. No tech background.</b></p>
+      <button class="cta" onclick="openModal()">Get the Blueprint <span class="price">$27</span></button>
+      <div class="anchor"><s>$298 value</s> · <b>today just $27</b> · instant access · 60-minute build</div>
+    </div>
+    <div>
+      <div class="chatcard">
+        <div class="stamp">try it live</div>
+        <div class="chathead">
+          <div class="avatar">M</div>
+          <div>
+            <div class="who">Maya · a sample AI clone</div>
+            <div class="status"><span class="pulse"></span>answers in her real voice</div>
+          </div>
+        </div>
+        <div class="demo-scroll" id="demo-scroll">
+          <div class="msg you">Hey, I'm Maya, a sample clone built with this exact Blueprint. Ask me anything a client might ask a productivity coach, and watch how I answer. 👇</div>
+        </div>
+        <div class="demo-input-row">
+          <input type="text" id="demo-input" placeholder="Ask Maya something…" onkeydown="if(event.key==='Enter')sendDemo()">
+          <button class="demo-send" id="demo-send" onclick="sendDemo()">Send</button>
+        </div>
+        <p class="demo-hint">This is a real AI clone. Yours would sound like <b>you</b>. That's what the Blueprint sets up.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR YOU IF -->
+  <section class="band foryou">
+    <div class="wrap">
+      <div class="section-eyebrow">This is for you if…</div>
+      <div class="foryou-grid">
+        <div class="foryou-item"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div><p>You answer the <b>same questions from your audience</b> over and over, and wish they could just get "you" on demand.</p></div>
+        <div class="foryou-item"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div><p>You've tried a custom GPT and it came out <b>robotic and generic</b>, nothing like the way you actually talk.</p></div>
+        <div class="foryou-item"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div><p>You want to give your audience or clients <b>access to your thinking 24/7</b> without being on call yourself.</p></div>
+        <div class="foryou-item"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div><p>You're <b>not technical</b>, and every "build an AI" tutorial lost you somewhere around step three.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY / PROOF -->
+  <section class="band story">
+    <div class="narrow">
+      <div class="section-eyebrow kick">How I know this works</div>
+      <h2>I built an AI version of a real coach, and the first thing her audience said was <em>"that actually sounds like her."</em></h2>
+      <div class="steps">
+        <div class="step-row"><div class="num">1</div><p>I took a handful of her content (a few talks, her posts, the answers she gives most) and fed it into a clone.</p></div>
+        <div class="step-row"><div class="num">2</div><p>But the piece that made it <b>sound like her</b> wasn't the content. It was capturing her <b>voice</b> first: her phrases, her rules, how she opens an answer.</p></div>
+        <div class="step-row"><div class="num">3</div><p>Her members started asking it questions between calls. It answered the way she would, and they couldn't tell the difference.</p></div>
+        <div class="step-row"><div class="num">4</div><p>The whole voice-capture part? It fits on <b>one page</b>. That page is the Blueprint you're getting.</p></div>
+      </div>
+      <p style="text-align:center;color:#9A9BC0;font-size:.9rem;margin-top:30px;font-family:'JetBrains Mono',monospace">I build production AI systems for businesses, the kind agencies charge $15k+ for. This is the stripped-down, do-it-yourself version of the very first thing I set up.</p>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES (real, permissioned, anonymized by request) -->
+  <section class="band" style="background:var(--porcelain)">
+    <div class="wrap">
+      <div class="section-eyebrow">Two people who built one</div>
+
+      <!-- Case 1: clone yourself -->
+      <div class="case">
+        <div class="case-body">
+          <div class="ctag">Clone yourself</div>
+          <h3>She runs a sales coaching community. The questions were eating her business.</h3>
+          <p>Her students loved having access to her, which was exactly the problem. She spent her days answering the same sales questions over and over, and there was no time left to actually <b>run the business</b> she'd built.</p>
+          <p>So she built an AI version of herself, trained on how she coaches. It now handles the bulk of those questions, in her voice, so students still get "her" any time, and she got her days back to work <b>on</b> the business instead of buried in the inbox.</p>
+          <p class="said">"It's literally me in a chat."</p>
+          <div class="attrib2">Sales coach · shared with permission, name withheld by request</div>
+        </div>
+        <div class="case-shot">
+          <div class="receipt">✓ real message</div>
+          <img src="assets/vicky_testimonial.png" alt="Client message: Love it, it really elevated my sales coaching business. It takes me out of answering the same questions; the AI handles them, and it's literally me in a chat.">
+        </div>
+      </div>
+
+      <!-- Case 2: clone your company -->
+      <div class="case rev">
+        <div class="case-body">
+          <div class="ctag">Clone your company's knowledge</div>
+          <h3>They wanted one source of truth for the whole business.</h3>
+          <p>A coaching company with a growing team wanted an AI that had <b>fully ingested how the business works</b>, so anyone could go to it as the single source of truth instead of chasing down answers across docs, people, and Slack threads.</p>
+          <p>Once it was built, the whole team started leaning on it every day. It knows the business, so it answers like the business, and it took the "where do I find this?" friction out of the day-to-day.</p>
+          <p class="said">"It's ingested the knowledge of our entire company, and they're blown away by it."</p>
+          <div class="attrib2">Coaching business owner · shared with permission, name withheld by request</div>
+        </div>
+        <div class="case-shot">
+          <div class="receipt">✓ real message</div>
+          <img src="assets/liz_testimonial.png" alt="Client message: This is absolutely amazing! It's ingested in the knowledge of our entire company, all of my employees are currently using it rigorously every day and they're blown away by it. Thanks a lot!">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WHY DIFFERENT -->
+  <section class="band">
+    <div class="wrap">
+      <h2 class="h2">Why yours sounds like a robot, and this <em>won't.</em></h2>
+      <p class="lead">Every tool starts with your <b>documents</b> and hopes a voice appears. It never does. The Blueprint starts with <b>you</b> (the way you'd actually answer a client at 9pm) before a single file gets uploaded. That's the whole difference.</p>
+      <div class="compare">
+        <div class="col old">
+          <div class="clab">The old way</div>
+          <h3>Upload &amp; pray</h3>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12"/></svg> Dump PDFs into a custom GPT</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12"/></svg> It skims them and answers like plain ChatGPT</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12"/></svg> Sounds nothing like you</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12"/></svg> Endless tweaking, then you give up</li>
+          </ul>
+        </div>
+        <div class="col new">
+          <div class="clab">The Blueprint way</div>
+          <h3>Voice first</h3>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Fill in the voice blueprint (15 min)</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Paste it in, add a little content</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Talk to an AI that sounds like you</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Done in under an hour</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUMBERED MECHANISM -->
+  <section class="band" style="background:var(--porcelain)">
+    <div class="wrap">
+      <h2 class="h2">How it works: <em>three steps, under 30 minutes.</em></h2>
+      <p class="lead">No setup, no accounts to wire together, no code. Just this:</p>
+      <div class="mech-steps">
+        <div class="mech-step">
+          <div class="mnum">1</div>
+          <h3>Fill in the Blueprint</h3>
+          <p>Answer the prompts that capture how you actually talk: your phrases, your rules, how you open an answer.</p>
+          <span class="time">~15 min</span>
+        </div>
+        <div class="mech-step">
+          <div class="mnum">2</div>
+          <h3>Paste it in, add content</h3>
+          <p>Drop your finished Blueprint into the setup, add a few pieces of your own content. It's live.</p>
+          <span class="time">~10 min</span>
+        </div>
+        <div class="mech-step">
+          <div class="mnum">3</div>
+          <h3>Test it &amp; share</h3>
+          <p>Run the 10 test questions to prove it sounds like you, then send the link to anyone.</p>
+          <span class="time">~5 min</span>
+        </div>
+      </div>
+      <p class="mech-total">That's it. <em>A working AI version of you</em>, before lunch.</p>
+    </div>
+  </section>
+
+  <!-- WHAT YOU GET (lean: 3 components) -->
+  <section class="band" style="background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="wrap">
+      <h2 class="h2">What's inside the kit</h2>
+      <p class="lead">Three things. That's it. Enough to get a working clone that sounds like you, not a course you'll never finish.</p>
+      <div class="grid3">
+        <div class="item"><div class="n">01</div><h3>The Voice Blueprint</h3><ul><li>The fill-in prompts that capture your voice</li><li>Your signature phrases &amp; "never-say" list</li><li>How you open, answer, and close</li></ul></div>
+        <div class="item"><div class="n">02</div><h3>The Instant Setup</h3><ul><li>Paste your blueprint in, it's live</li><li>The "what content to add first" picker</li><li>Nothing to configure or wire up</li></ul></div>
+        <div class="item"><div class="n">03</div><h3>The 20-min Walkthrough</h3><ul><li>One screen-share, blank page to done</li><li>Follow along once, that's the build</li><li>The three test questions to prove it</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE STACK -->
+  <section class="band">
+    <div class="wrap">
+      <h2 class="h2">Everything you get today</h2>
+      <div class="stackbox" style="margin-top:34px">
+        <div class="srow"><span>The Voice Blueprint (fill-in kit)</span><span>$97</span></div>
+        <div class="srow"><span>The Instant Setup + 20-min walkthrough</span><span>$67</span></div>
+        <div class="stackdiv">Free bonuses included today</div>
+        <div class="srow bonus"><span>The Voice-Capture Prompt</span><span>$39</span></div>
+        <div class="srow bonus"><span>The Clone Test Kit: 10 questions</span><span>$29</span></div>
+        <div class="srow bonus"><span>3 Done-For-You Example Personas</span><span>$47</span></div>
+        <div class="srow bonus"><span>The 1-Page Quick-Start Checklist</span><span>$19</span></div>
+        <div class="tot"><span>Total value</span><span>$298</span></div>
+        <div class="anchorbar">
+          <div class="today"><s>$298</s>$27</div>
+          <div class="mono" style="color:var(--ink-soft);font-size:.82rem">one-time · you save $271 today</div>
+        </div>
+        <button class="cta" onclick="openModal()">Get the Blueprint <span class="price">$27</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUARANTEE -->
+  <section class="band" style="padding-top:0">
+    <div class="wrap">
+      <div class="guarantee">
+        <div class="shield"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div>
+          <h3>Talk to AI-you within 60 minutes, or don't pay.</h3>
+          <p>Open the Blueprint and follow it. If you don't have an AI that sounds like you inside an hour, email me for a full refund, and keep the kit anyway. The risk is mine.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="band" style="background:var(--white);border-top:1px solid var(--line)">
+    <div class="wrap">
+      <h2 class="h2">Questions</h2>
+      <div class="faq" style="margin-top:30px">
+        <div class="qa"><div class="q">Do I need to know how to code?</div><div class="a">No. If you can fill in a document and copy-paste, you can build this. That's the whole point.</div></div>
+        <div class="qa"><div class="q">How long does it actually take?</div><div class="a">Under an hour, start to finish, following the walkthrough. Most of that is you filling in the voice blueprint.</div></div>
+        <div class="qa"><div class="q">What if I don't have much content?</div><div class="a">You only need a handful of pieces: a few posts, a talk, the answers you give most. The voice layer does the heavy lifting, not the volume.</div></div>
+        <div class="qa warn"><div class="q">Who should NOT buy this?</div><div class="a">If you want a fully production-grade AI trained on your entire body of work, deployed on your own infrastructure with airtight accuracy, this isn't that, and I don't want you disappointed. This is the fast, working <em>first version</em> that sounds like you. (The full production build is a separate, much bigger thing.)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="wrap final">
+    <h2>Talk to AI-you tonight.</h2>
+    <button class="cta" onclick="openModal()">Get the Blueprint <span class="price">$27</span></button>
+    <div class="anchor"><s>$298 value</s> · <b>today just $27</b> · you save $271</div>
+  </section>
+
+  <footer><div class="wrap"><p>You're buying a build kit, not an income promise. Just the fastest way to a working clone of your voice.</p></div></footer>
+</div>
+
+<!-- ===== VIEW 2: OTO 1 ===== -->
+<div class="view" id="view-oto1">
+  <section class="wrap oto">
+    <div class="flag">One-time offer · you won't see this again</div>
+    <h2>Wait, your clone works. Want it <em>live on your website</em> in 20 minutes?</h2>
+    <p class="o-lede">Right now your clone lives inside a tool. The Deploy Kit gives you the exact copy-paste steps to embed it on your own site, so your audience can actually talk to it, today, on your domain.</p>
+    <div class="otocard">
+      <div class="price-lg">$47 <small>one-time · add with one click</small></div>
+      <ul>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> The embed snippet + step-by-step placement guide</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Where to put it so it gets used, not buried</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> A capture prompt so it collects emails while it chats</li>
+      </ul>
+      <button class="btn btn-yes" onclick="acceptOto('Deploy Kit',47)">Yes, add the Deploy Kit ($47)</button>
+      <div class="oneclick">🔒 One click, your card is already on file</div>
+      <button class="decline" id="oto1-decline">No thanks, I'll keep it simple</button>
+    </div>
+  </section>
+</div>
+
+<!-- ===== VIEW 3: DOWNSELL ===== -->
+<div class="view" id="view-downsell">
+  <section class="wrap oto">
+    <div class="flag">Last chance</div>
+    <h2>No problem, want just the <em>embed snippet?</em></h2>
+    <p class="o-lede">If the full Deploy Kit is more than you need, grab the bare snippet + a one-page placement guide. Enough to get your clone onto your site, minus the extras.</p>
+    <div class="otocard">
+      <div class="price-lg">$19 <small>one-time · add with one click</small></div>
+      <ul>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> The embed snippet</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B3FE4" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> A one-page "where to place it" guide</li>
+      </ul>
+      <button class="btn btn-yes" onclick="acceptOto('Deploy Lite',19)">Add Deploy Lite ($19)</button>
+      <button class="decline" onclick="showView('view-thankyou');renderTY()">No thanks, take me to my kit</button>
+    </div>
+  </section>
+</div>
+
+<!-- ===== VIEW 4: THANK YOU ===== -->
+<div class="view" id="view-thankyou">
+  <section class="narrow ty">
+    <div class="check"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h2 id="ty-greeting">You're in. Your clone is ready to build.</h2>
+    <p class="t-lede">Everything's below. Start with the walkthrough, you'll be talking to AI-you before you finish your coffee.</p>
+    <div class="video"><div class="play"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div><div class="vlabel">▶ Your 20-minute walkthrough</div></div>
+    <p class="vcap">(In production the training Loom sits right here, no members' area.)</p>
+    <div class="orderbox"><div class="oh">Your order</div><div id="ty-order"></div></div>
+    <div class="bridge">
+      <div class="kick">One honest heads-up before you build</div>
+      <h3>Your clone is going to feel great, and then you'll <em>hit its ceiling.</em></h3>
+      <p>That's not you doing it wrong. It's where the toy ends and the real system begins. The version you're about to build will start to show its edges:</p>
+      <div class="walls"><span class="wall">it makes things up</span><span class="wall">won't hold all your content</span><span class="wall">you don't really own it</span><span class="wall">stuck inside a tool</span></div>
+      <p>When you're ready to build the <b>production</b> version (accurate, trained on everything you've made, deployed on infrastructure you own), that's the full AI Clone Course.</p>
+      <button class="cta" style="margin-top:20px" onclick="alert('In production this links to the AI Clone Course VSL ($297 to $497).')">See the production system →</button>
+    </div>
+  </section>
+</div>
+
+<!-- ORDER MODAL -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+  <div class="modal">
+    <div class="mhead"><span class="step" id="steplabel">Step 1 of 2 · Your details</span><button class="x" onclick="closeModal()" aria-label="Close">×</button></div>
+    <div class="mbody" id="step1">
+      <h4 id="mtitle">Where should we send it?</h4>
+      <p class="m-lede">Instant access. You'll be building within minutes.</p>
+      <label class="fld">Your name<input type="text" id="name" placeholder="Jane Doe" autocomplete="name"></label>
+      <label class="fld">Email<input type="email" id="email" placeholder="you@email.com" autocomplete="email"></label>
+      <button class="btn" onclick="goStep2()">Continue →</button>
+      <p class="mnote">🔒 Secure checkout · never submit passwords</p>
+    </div>
+    <div class="mbody hidden" id="step2">
+      <button class="back" onclick="goStep1()">← back</button>
+      <h4>Complete your order</h4>
+      <p class="m-lede">Two quick add-ons most people grab. Check any that help.</p>
+      <label class="bump"><input type="checkbox" id="bump1" onchange="recalc()"><span><span class="bt">The "Sounds Exactly Like Me" Voice Upgrade <span>+$17</span></span><span class="bd">Advanced calibration prompts that take the clone from "close" to eerily on. Kills the robotic edge before it starts.</span></span></label>
+      <label class="bump"><input type="checkbox" id="bump2" onchange="recalc()"><span><span class="bt">The "What to Feed It First" Content Pack <span>+$13</span></span><span class="bd">Done-for-you checklist + templates for choosing and prepping your starter content, so it's sharp from message one.</span></span></label>
+      <div class="summary">
+        <div class="row"><span>The Clone Blueprint</span><span class="mono">$27</span></div>
+        <div class="row hidden" id="r1"><span>Voice Upgrade</span><span class="mono">$17</span></div>
+        <div class="row hidden" id="r2"><span>Content Pack</span><span class="mono">$13</span></div>
+        <div class="row total"><span>Total</span><span class="mono" id="total">$27</span></div>
+      </div>
+      <button class="btn" style="margin-top:18px" onclick="pay()">Get instant access, <span id="btnprice">$27</span></button>
+      <p class="mnote">60-minute guarantee · keep the kit either way</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  var order=[],buyerName='';
+  // ===== LIVE CLONE DEMO =====
+  var demoHistory=[];
+  function demoAppend(role,text){
+    var s=document.getElementById('demo-scroll');
+    var d=document.createElement('div');
+    d.className='msg '+(role==='user'?'them':'you');
+    d.textContent=text;
+    s.appendChild(d);
+    s.scrollTop=s.scrollHeight;
+    return d;
+  }
+  function demoTyping(){
+    var s=document.getElementById('demo-scroll');
+    var d=document.createElement('div');
+    d.className='msg you typing';
+    d.innerHTML='<span></span><span></span><span></span>';
+    s.appendChild(d);s.scrollTop=s.scrollHeight;
+    return d;
+  }
+  async function sendDemo(){
+    var input=document.getElementById('demo-input');
+    var btn=document.getElementById('demo-send');
+    var text=(input.value||'').trim();
+    if(!text)return;
+    input.value='';btn.disabled=true;
+    demoAppend('user',text);
+    demoHistory.push({role:'user',content:text});
+    if(demoHistory.length>12)demoHistory=demoHistory.slice(-12);
+    var t=demoTyping();
+    try{
+      var res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-6',max_tokens:1000,
+          system:"You are Maya, a warm but no-nonsense productivity coach. You are a DEMO AI clone on a sales page, proving an AI can answer in a real person's voice. Voice rules: short punchy sentences; open with a quick reframe of their problem; occasionally use phrases like 'Real talk,' or 'Okay, here's the thing'; always give ONE concrete next action; tough-love warmth. Keep every reply under 55 words. Never use em dashes or en dashes; use commas, colons, or periods instead. Stay fully in character as Maya. Do not mention being an AI or a demo unless the user directly asks.",
+          messages:demoHistory
+        })
+      });
+      var data=await res.json();
+      var reply=(data.content||[]).filter(function(b){return b.type==='text'}).map(function(b){return b.text}).join(' ').trim();
+      if(!reply)throw new Error('empty');
+      t.remove();
+      demoAppend('assistant',reply);
+      demoHistory.push({role:'assistant',content:reply});
+    }catch(e){
+      t.remove();
+      demoAppend('assistant',"Real talk, the live demo's catching its breath for a sec. But here's the point: everything I say comes out in my voice, my phrasing, my rules. That's exactly what the Blueprint sets up for YOU. Try me again in a moment.");
+    }
+    btn.disabled=false;input.focus();
+  }
+
+  var overlay=document.getElementById('overlay'),lastFocus=null;
+  function openModal(){lastFocus=document.activeElement;overlay.classList.add('open');goStep1();document.getElementById('name').focus();document.body.style.overflow='hidden';}
+  function closeModal(){overlay.classList.remove('open');document.body.style.overflow='';if(lastFocus)lastFocus.focus();}
+  function goStep1(){document.getElementById('step1').classList.remove('hidden');document.getElementById('step2').classList.add('hidden');document.getElementById('steplabel').textContent='Step 1 of 2 · Your details';}
+  function goStep2(){var e=document.getElementById('email');if(!e.value||e.value.indexOf('@')<1){e.focus();e.style.borderColor='#c0392b';return;}buyerName=(document.getElementById('name').value||'').trim();document.getElementById('step1').classList.add('hidden');document.getElementById('step2').classList.remove('hidden');document.getElementById('steplabel').textContent='Step 2 of 2 · Checkout';}
+  function recalc(){var t=27,b1=document.getElementById('bump1').checked,b2=document.getElementById('bump2').checked;document.getElementById('r1').classList.toggle('hidden',!b1);document.getElementById('r2').classList.toggle('hidden',!b2);if(b1)t+=17;if(b2)t+=13;document.getElementById('total').textContent='$'+t;document.getElementById('btnprice').textContent='$'+t;}
+  function pay(){order=[{name:'The Clone Blueprint',price:27}];if(document.getElementById('bump1').checked)order.push({name:'Voice Upgrade',price:17});if(document.getElementById('bump2').checked)order.push({name:'Content Pack',price:13});closeModal();showView('view-oto1');}
+  function acceptOto(n,p){order.push({name:n,price:p});showView('view-thankyou');renderTY();}
+  function showView(id){var vs=document.querySelectorAll('.view');for(var i=0;i<vs.length;i++)vs[i].classList.remove('active');document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+  document.getElementById('oto1-decline').addEventListener('click',function(){showView('view-downsell');});
+  function renderTY(){if(buyerName)document.getElementById('ty-greeting').textContent='You\u2019re in, '+buyerName+'. Your clone is ready to build.';var t=0,h='';for(var i=0;i<order.length;i++){t+=order[i].price;h+='<div class="row"><span>'+order[i].name+'</span><span class="mono">$'+order[i].price+'</span></div>';}h+='<div class="row total" style="border-top:1px solid var(--line);padding-top:12px;margin-top:6px"><span>Total paid</span><span class="mono">$'+t+'</span></div>';document.getElementById('ty-order').innerHTML=h;}
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&overlay.classList.contains('open'))closeModal();});
+  overlay.addEventListener('click',function(e){if(e.target===overlay)closeModal();});
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+
+# Local lead capture (dev only)
+funnel-app/data/leads.jsonl
+
+# Tooling / OS
+.qodo/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
