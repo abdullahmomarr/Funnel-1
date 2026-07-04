@@ -192,6 +192,18 @@ export default function Funnel() {
           <section className="wrap hero">
             <div>
               <div className="eyebrow">For coaches · consultants · creators</div>
+              <p
+                style={{
+                  maxWidth: "42ch",
+                  color: "var(--ink-soft)",
+                  fontSize: "1rem",
+                  lineHeight: 1.5,
+                  marginBottom: 16,
+                }}
+              >
+                You&apos;ve seen the &quot;AI clones&quot; that sound like a robot reading your notes.
+                This is how you build one that actually sounds like you.
+              </p>
               <h1>
                 Clone your voice into an AI that <em>answers exactly like you.</em>
               </h1>
@@ -305,36 +317,36 @@ export default function Funnel() {
           <section className="band story">
             <div className="narrow">
               <div className="section-eyebrow kick">How I know this works</div>
-              <h2>
-                I built an AI version of a real coach, and the first thing her audience said was{" "}
-                <em>&quot;that actually sounds like her.&quot;</em>
-              </h2>
+              <h2>The first AI version of myself I built was terrible.</h2>
               <div className="steps">
                 <div className="step-row">
                   <div className="num">1</div>
                   <p>
-                    I took a handful of her content (a few talks, her posts, the answers she gives
-                    most) and fed it into a clone.
+                    I did what everyone does: dumped my docs into a custom GPT and asked it a
+                    question. It gave me a technically-correct answer that sounded like a stranger
+                    reading my notes. Nothing like me. I almost wrote the whole idea off.
                   </p>
                 </div>
                 <div className="step-row">
                   <div className="num">2</div>
                   <p>
-                    But the piece that made it <b>sound like her</b> wasn&apos;t the content. It was
-                    capturing her <b>voice</b> first: her phrases, her rules, how she opens an answer.
+                    Then it clicked: the tool had my information, but nobody had ever given it my{" "}
+                    <b>voice</b>, my phrases, my rules, how I actually open an answer. So I built a
+                    way to capture that first, before any content went in.
                   </p>
                 </div>
                 <div className="step-row">
                   <div className="num">3</div>
                   <p>
-                    Her members started asking it questions between calls. It answered the way she
-                    would, and they couldn&apos;t tell the difference.
+                    The difference was night and day. So I did it for a coach, trained on how she
+                    actually talks. Her members started asking it questions between calls, and
+                    couldn&apos;t tell it wasn&apos;t her.
                   </p>
                 </div>
                 <div className="step-row">
                   <div className="num">4</div>
                   <p>
-                    The whole voice-capture part? It fits on <b>one page</b>. That page is the
+                    That whole voice-capture part? It fits on <b>one page</b>. That page is the
                     Blueprint you&apos;re getting.
                   </p>
                 </div>
