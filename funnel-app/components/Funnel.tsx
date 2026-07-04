@@ -216,7 +216,7 @@ export default function Funnel() {
                 Get the Blueprint <span className="price">$27</span>
               </button>
               <div className="anchor">
-                <s>$298 value</s> · <b>today just $27</b> · instant access · 60-minute build
+                <s>$298 value</s> · <b>today just $27</b> · instant access · under an hour
               </div>
             </div>
             <div>
@@ -570,7 +570,7 @@ export default function Funnel() {
                   <ul>
                     <li>One screen-share, blank page to done</li>
                     <li>Follow along once, that&apos;s the build</li>
-                    <li>The three test questions to prove it</li>
+                    <li>The 10 test questions to prove it</li>
                   </ul>
                 </div>
               </div>
