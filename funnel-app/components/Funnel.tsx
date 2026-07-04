@@ -618,6 +618,12 @@ export default function Funnel() {
                   <div className="mono" style={{ color: "var(--ink-soft)", fontSize: ".82rem" }}>
                     one-time · you save $271 today
                   </div>
+                  <div
+                    className="mono"
+                    style={{ color: "var(--red)", fontSize: ".82rem", marginTop: 6 }}
+                  >
+                    Launch price. Goes to $47 after launch week.
+                  </div>
                 </div>
                 <button className="cta" onClick={openModal}>
                   Get the Blueprint <span className="price">$27</span>
