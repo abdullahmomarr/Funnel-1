@@ -158,7 +158,7 @@ section.band{padding:60px 0}
 .stackbox .tot span:last-child{font-family:'JetBrains Mono',monospace}
 .stackbox .today{font-family:'Fraunces',serif;font-size:2.6rem;font-weight:500;color:var(--iris);margin:16px 0 4px;line-height:1}
 .stackbox .today s{font-size:1.1rem;color:var(--ink-soft);font-family:'Inter',sans-serif;margin-right:10px}
-.stackbox .cta{margin:22px auto 0;width:100%}
+.stackbox .cta{margin:22px auto 0;width:100%;justify-content:center}
 .stackbox .stackdiv{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--iris-deep);text-align:left;padding:16px 0 6px;border-bottom:1px dashed var(--line)}
 .stackbox .srow.bonus span:first-child{color:var(--ink)}
 .stackbox .srow.bonus span:first-child::before{content:"★ ";color:var(--iris)}
